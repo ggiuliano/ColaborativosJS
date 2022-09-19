@@ -1,0 +1,92 @@
+<html>
+    <head>
+        <script src="/socket.io/socket.io.js"></script>
+        <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet" id="bootstrap-css">
+        <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+        <script src="https://cdn.socket.io/4.5.0/socket.io.min.js" integrity="sha384-7EyYLQZgWBi67fBtVxw60/OWl1kjsfrPFcaU0pp0nAh+i8FD068QogUvg85Ewy1k" crossorigin="anonymous"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="./functions.js"></script>
+        <style>
+            body { background-color: #17a2b8;}
+            h2 { text-align: center;}
+            #app .container {
+                margin-top: 120px;
+                max-width: 600px;
+                height: 820px;
+                border: 1px solid #9C9C9C;
+                background-color: #EAEAEA;
+            }
+            #app .container #zona-clientes{
+                margin: 20px;
+            }
+            #app .container #zona-pedidos{
+                margin: 20px;
+            }
+            #app .container #zona-detalle-pedido{
+                margin: 20px;
+                margin-left: 100px;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="app">
+            <div class="container">
+                <div id="zona-clientes">
+                    <h2>Clientes</h2>
+                    <form onsubmit="return guardarCliente(this)">
+                        <input id="nombre" type="text" required value="" placeholder="Nombre"  /> 
+                        <input id="apellido" type="text" required value="" placeholder="Apellido" />
+                        <input id="dni" type="text" required value="" placeholder="dni" />
+                        <input id="email" type="text" required value="" placeholder="email" />
+                        <input type="submit" value="Crear"></input>
+                    </form>
+        
+                    <form onsubmit="borrarCliente(this)">
+                        <select id='listaClientes' class='form-control' required>
+                        </select>
+                        <input type="submit" value="Borrar"></input>
+                    </form>
+                </div>
+                
+                <div id="zona-pedidos">
+                    <h2 style="color: blue;">Centro de Pedidos</h2>
+                    <form onsubmit="sumarProducto(this)">
+                        <label>Cliente: 
+                        <select id='listaClientes2' class='form-control' required></select>
+                        </label>
+        
+                        <label>Producto: 
+                            <select id='listaProductos' class='form-control' required></select>
+                            <input id="cantidad" type="text" required value="" placeholder="Cantidad"  />
+                        </label>
+                        <input type="submit" value="Sumar Producto" style="margin-left: 215px ;"></input>
+                        <p id="errorStock"></p>
+                    </form>
+                    <button onclick="mostrarPedido(this)" style="width: 100%">Ver Pedido</button>
+                </div>
+                <h2 style="color: blue;">Detalle Pedido</h2>
+                <div id="zona-detalle-pedido">
+                    <table class="table" id="tablaPedidos">
+                        <thead>
+                          <tr>
+                            <th>Producto</th>
+                            <th>Precio</th>
+                            <th>Cantidad</th>
+                            <th style="width: 36px;"></th>
+                          </tr>
+                        </thead>
+                        <tbody></tbody>
+                </div>
+                </table>
+                <label for="total" id="totalPedido"></label>
+
+            </div>
+        </div>
+      
+        
+
+    </body>
+</html>
