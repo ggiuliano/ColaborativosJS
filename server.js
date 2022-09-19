@@ -4,7 +4,7 @@ const { getConnection } = require('./models/dao/connection')
 const Clientes = require('./controller/clientes')
 const Productos = require('./controller/productos')
 const app = express()
-const { PORT } = require ('./config/globals')
+
 
 //websocket
 const http = require("http")
@@ -16,6 +16,7 @@ const io = new Server(server)
 const routerProductos = require('./routes/productos')
 //^^^^^^^^^^-BORRAR ESTO-^^^^^^^^^^
 
+const PORT = process.env.PORT || 8080
 
 app.use(express.static('public'))
 
