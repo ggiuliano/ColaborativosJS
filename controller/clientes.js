@@ -48,8 +48,8 @@ module.exports = class ClientesDB {
       return 'stockError'
     }
 
-    if (cantidadProd === 0){
-      return 'stockError'
+    if (cantidadProd == 0){
+      return 'cantError'
     }
 
     let indiceProductoCliente = productosCliente.findIndex(f => f.id == productoID)

@@ -61,17 +61,20 @@ io.on("connection", async (socket) => {
     })
 
     socket.on('clientePedido', async (clientePedido) => {
-        console.log(`se recibio esto: ${JSON.stringify(clientePedido)}`)
+        const error = "no hay stock suficiente"
         const clienteProducto = await new Clientes().agregarProducto(clientePedido)
         if (clienteProducto == 'stockError'){
-            socket.emit("error-stock") //TODO: POPUP DE ERROR
+            console.log('ERROR?',clienteProducto)
+            socket.emit("falta-stock", error) //TODO: POPUP DE ERROR
         }
-        const refresh = await new Clientes().listarClientes()
-        socket.emit("todos-los-prod-pedidos",refresh)
+        if(clienteProducto == 'cantError'){
+            console.log('ERROR?',clienteProducto)
+        }
+        // const refresh = await new Clientes().listarClientes()
+        // socket.emit("todos-los-prod-pedidos",refresh)
     })
 
     socket.on('mostrar-pedidos', async (prodPedidos) => {
-        console.log(`se recibio: ${JSON.stringify(prodPedidos)}`)
         const client = await new Clientes().buscarCliente(prodPedidos)
         let totalPedido = 0
 
@@ -83,20 +86,6 @@ io.on("connection", async (socket) => {
             socket.emit("mostrar-prod-pedidos", [productosPedido,totalPedido])
         }
     })
-
-    // socket.on('generar-ticket', async (prodPedidos) =>{
-    //     const client = await new Clientes().buscarCliente(prodPedidos)
-    //     let totalPedido = 0
-    //     if (prodPedidos != ''){
-    //         const productosDelPedido = client.productos
-    //         console.log(productosDelPedido)
-    //         for (i=0; i<productosDelPedido.length; i++){
-    //             totalPedido = totalPedido + (productosDelPedido[i].precio * productosDelPedido[i].cantidad)
-    //         }
-    //         console.log(`total del pedido es ${totalPedido}`)
-    //         //socket.emit("mostrar-prod-pedidos", productosDelPedido)
-    //     }
-    // })
 
 })
 

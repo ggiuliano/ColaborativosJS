@@ -9,7 +9,7 @@ var templateClientes = Handlebars.compile(`
 `)
 
 var templateProductos = Handlebars.compile(`
-    <option value="" disabled selected>Seleccionar Cliente</option>
+    <option value="" disabled selected>Seleccionar Producto</option>
     {{# each productos }}
     <option value={{this.id}}>{{this.nombre}}</option>
     {{/each}}
@@ -30,7 +30,7 @@ var templatetotal = Handlebars.compile(`
 `)
 
 var templateError = Handlebars.compile(`
-    <label>Error, no hay stock suficiente</label>
+        <label>{{error}}</label>
 `)
 
 //funcion para guardar un cliente en la BD cargado mediante el form
@@ -105,9 +105,9 @@ function mostrarTodosProdPedidos(pedido){
     $('#totalPedido').html(total)
 }
 
-function mostrarError(){
-    let elHtml = templateError()
-    $('#errorDeStock').html(elHtml)
+function mostrarError(error){
+    let elHtml = templateError(error)
+    $('#errorStock').html(elHtml)
 }
 
 // Recibo todos los clientes del back
@@ -125,6 +125,6 @@ socket.on('mostrar-prod-pedidos', function(data) {
 });
 
 //error message
-socket.on('error-stock', function(){
-    mostrarError()
+socket.on('falta-stock', function(data){
+    mostrarError(data)
 })
