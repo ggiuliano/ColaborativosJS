@@ -70,20 +70,21 @@ io.on("connection", async (socket) => {
         if(clienteProducto == 'cantError'){
             console.log('ERROR?',clienteProducto)
         }
-        // const refresh = await new Clientes().listarClientes()
-        // socket.emit("todos-los-prod-pedidos",refresh)
+        const refresh = await new Clientes().listarClientes()
+        socket.emit("todos-los-prod-pedidos",refresh)
     })
 
     socket.on('mostrar-pedidos', async (prodPedidos) => {
         const client = await new Clientes().buscarCliente(prodPedidos)
         let totalPedido = 0
+        let nowDate = moment().format('DD/MM/YYYY');
 
         if (prodPedidos != ''){
             const productosPedido = client.productos
             for (i=0; i<productosPedido.length; i++){
                 totalPedido = totalPedido + (productosPedido[i].precio * productosPedido[i].cantidad)
             }
-            socket.emit("mostrar-prod-pedidos", [productosPedido,totalPedido])
+            socket.emit("mostrar-prod-pedidos", [productosPedido,totalPedido, nowDate])
         }
     })
 

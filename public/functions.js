@@ -29,6 +29,10 @@ var templatetotal = Handlebars.compile(`
           <label style="font-weight:bold">Total: {{total}}</label>
 `)
 
+var templatetotal = Handlebars.compile(`
+          <label style="font-weight:bold">Fecha: {{date}}</label>
+`)
+
 var templateError = Handlebars.compile(`
         <label>{{error}}</label>
 `)
@@ -101,8 +105,10 @@ function mostrarTodosProductos(productos){
 function mostrarTodosProdPedidos(pedido){
     let elHtml = templatePedidos({pedido:pedido[0]})
     let total = templatetotal({total:pedido[1]})
+    let date = templateDate({date:pedido[2]})
     $('#tablaPedidos tbody').html(elHtml)
     $('#totalPedido').html(total)
+    $('#datePedido').html(total)
 }
 
 function mostrarError(error){
