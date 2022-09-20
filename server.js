@@ -1,6 +1,7 @@
 const express = require('express')
 const moment = require('moment')
 const { getConnection } = require('./models/dao/connection')
+const { PORT } = require('./config/globals')
 const Clientes = require('./controller/clientes')
 const Productos = require('./controller/productos')
 const app = express()
@@ -13,10 +14,8 @@ const { Server } = require('socket.io')
 const io = new Server(server)
 
 //vvvvvvvvvv-BORRAR ESTO-vvvvvvvvvv
-const routerProductos = require('./routes/productos')
+const routerProductos = require('./routes/rutas')
 //^^^^^^^^^^-BORRAR ESTO-^^^^^^^^^^
-
-const PORT = process.env.PORT || 8080
 
 app.use(express.static('public'))
 
@@ -53,25 +52,26 @@ io.on("connection", async (socket) => {
     })
 
     socket.on('clienteBorrar', async (clienteBorrar) => {
+        console.log(`se recibio esto: ${JSON.stringify(clienteBorrar)}`)
         const borrarcliente = await new Clientes().borrarClientes(clienteBorrar)
         console.log(`Cliente borrado`)
 
-        const refresh = await new Clientes().listarClientes()
-        socket.emit("todos-los-clientes",refresh)
+        const refresh1 = await new Clientes().listarClientes()
+        socket.emit("todos-los-clientes",refresh1)
     })
 
     socket.on('clientePedido', async (clientePedido) => {
         const error = "no hay stock suficiente"
+        const confirm = 'producto cargado exitosamente'
         const clienteProducto = await new Clientes().agregarProducto(clientePedido)
-        if (clienteProducto == 'stockError'){
-            console.log('ERROR?',clienteProducto)
-            socket.emit("falta-stock", error) //TODO: POPUP DE ERROR
+        console.log('ERROR?',clienteProducto)
+
+        if (clienteProducto == 'Error'){
+            socket.emit("falta-stock", [error])
         }
-        if(clienteProducto == 'cantError'){
-            console.log('ERROR?',clienteProducto)
+        if (clienteProducto != 'Error'){
+            socket.emit("confirmation", [confirm])
         }
-        const refresh = await new Clientes().listarClientes()
-        socket.emit("todos-los-prod-pedidos",refresh)
     })
 
     socket.on('mostrar-pedidos', async (prodPedidos) => {

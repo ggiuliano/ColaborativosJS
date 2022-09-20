@@ -29,12 +29,16 @@ var templatetotal = Handlebars.compile(`
           <label style="font-weight:bold">Total: {{total}}</label>
 `)
 
-var templatetotal = Handlebars.compile(`
+var templateDate = Handlebars.compile(`
           <label style="font-weight:bold">Fecha: {{date}}</label>
 `)
 
 var templateError = Handlebars.compile(`
-        <label>{{error}}</label>
+        <label style="font-weight:bold; color: red;">{{error}}</label>
+`)
+
+var templateConfirm = Handlebars.compile(`
+        <label style="font-weight:bold; color: green;">{{confirm}}</label>
 `)
 
 //funcion para guardar un cliente en la BD cargado mediante el form
@@ -108,12 +112,17 @@ function mostrarTodosProdPedidos(pedido){
     let date = templateDate({date:pedido[2]})
     $('#tablaPedidos tbody').html(elHtml)
     $('#totalPedido').html(total)
-    $('#datePedido').html(total)
+    $('#datePedido').html(date)
 }
 
 function mostrarError(error){
-    let elHtml = templateError(error)
-    $('#errorStock').html(elHtml)
+    let stockerror = templateError({error:error[0]})
+    $('#errorStock').html(stockerror)
+}
+
+function hacerConfirmacion(confirm){
+    let confirmation = templateConfirm({confirm:confirm[0]})
+    $('#errorStock').html(confirmation)
 }
 
 // Recibo todos los clientes del back
@@ -132,5 +141,11 @@ socket.on('mostrar-prod-pedidos', function(data) {
 
 //error message
 socket.on('falta-stock', function(data){
+    console.log('llegue a falta de stock', data)
     mostrarError(data)
+})
+
+socket.on('confirmation', function(data){
+    console.log('llegue a confirmation', data)
+    hacerConfirmacion(data)
 })

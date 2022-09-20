@@ -25,14 +25,14 @@ const routerProductos = express.Router()
 //     res.redirect('/productos')
 // })
 
-module.exports = routerProductos.get('/test', async (req,res) => {
+module.exports = routerProductos.get('/users', async (req,res) => {
     const todosLosClientes = await new Clientes().listarClientes()
     res.send(todosLosClientes)
 })
 
-module.exports = routerProductos.get('/prodlist', async (req,res) => {
-    const productoNuevo = await new Productos().listarProductos()
-    res.send(productoNuevo)
+module.exports = routerProductos.get('/productos', async (req,res) => {
+    const todosLosProductos = await new Productos().listarProductos()
+    res.send(todosLosProductos)
 })
 
 module.exports = routerProductos.post('/prod', async (req,res) => {

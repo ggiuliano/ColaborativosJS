@@ -38,34 +38,28 @@ module.exports = class ClientesDB {
   }
 
   async agregarProducto({clienteID, productoID, cantidadProd}){
-    let elCliente = await this.buscarCliente(clienteID)
-    let clienteinternal_id = elCliente._id.toString()
-    let elProducto = await Productos.buscarProducto(productoID)
-    let prodinternal_id = elProducto._id.toString()
-    let productosCliente = elCliente.productos
+    let elCliente = await this.buscarCliente(clienteID) //traigo al cliente que le queremos sumar el producto
+    let clienteinternal_id = elCliente._id.toString() //saco el internal ID de dicho cliente
+    let elProducto = await Productos.buscarProducto(productoID) //busco el producto que le queremos sumar
+    let productosCliente = elCliente.productos //saco el listado de productos que actualmente tiene el cliente
 
-    if(cantidadProd > elProducto.stock){
-      return 'stockError'
+    if (cantidadProd == 0 || cantidadProd > elProducto.stock || elProducto.stock == 0){
+      return 'Error'
+
+    } else {
+      let indiceProductoCliente = productosCliente.findIndex(f => f.id == productoID)
+
+      if(indiceProductoCliente == -1){ //significa que el producto a insertar no estaba en el pedido del user entonces lo inserto
+        elProducto.cantidad = cantidadProd
+        elCliente.productos.push(elProducto)
+        await clientesModel.findByIdAndUpdate(clienteinternal_id,elCliente,{new:false})
+        await Productos.actualizarStock(productoID, cantidadProd)
+      }else{ //significa que el producto ya estaba, por lo tanto sumo la cantidad nueva
+        productosCliente[indiceProductoCliente].cantidad = productosCliente[indiceProductoCliente].cantidad + parseInt(cantidadProd)
+        await clientesModel.findByIdAndUpdate(clienteinternal_id,elCliente,{new:true})
+        await Productos.actualizarStock(productoID, cantidadProd)
+      }
     }
-
-    if (cantidadProd == 0){
-      return 'cantError'
-    }
-
-    let indiceProductoCliente = productosCliente.findIndex(f => f.id == productoID)
-
-    if(indiceProductoCliente == -1){ //significa que el producto a insertar no estaba en el pedido del user
-      elProducto.cantidad = cantidadProd
-      elCliente.productos.push(elProducto)
-      await clientesModel.findByIdAndUpdate(clienteinternal_id,elCliente,{new:false})
-      await Productos.actualizarStock(productoID, cantidadProd)
-    }else{
-      productosCliente[indiceProductoCliente].cantidad = productosCliente[indiceProductoCliente].cantidad + parseInt(cantidadProd)
-      await clientesModel.findByIdAndUpdate(clienteinternal_id,elCliente,{new:true})
-  
-      await Productos.actualizarStock(productoID, cantidadProd)
-    }
-
   }
 
   async borrarClientes(id){

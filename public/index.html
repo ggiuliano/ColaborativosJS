@@ -11,83 +11,81 @@
         <style>
             body { background-color: #17a2b8;}
             h2 { text-align: center;}
-            #app .container {
+            .container {
                 margin-top: 120px;
                 max-width: 600px;
-                height: 820px;
-                border: 1px solid #9C9C9C;
+                height: 900px;
+                border: 3px solid #9C9C9C;
                 background-color: #EAEAEA;
             }
-            #app .container #zona-clientes{
+            .container-clientes{
                 margin: 20px;
             }
-            #app .container #zona-pedidos{
+            .centro-pedidos{
                 margin: 20px;
             }
-            #app .container #zona-detalle-pedido{
+            .detalle-pedido{
                 margin: 20px;
                 margin-left: 100px;
             }
         </style>
     </head>
-
     <body>
-        <div id="app">
-            <div class="container">
-                <div id="zona-clientes">
-                    <h2>Clientes</h2>
-                    <form onsubmit="return guardarCliente(this)">
-                        <input id="nombre" type="text" required value="" placeholder="Nombre"  /> 
-                        <input id="apellido" type="text" required value="" placeholder="Apellido" />
-                        <input id="dni" type="text" required value="" placeholder="dni" />
-                        <input id="email" type="text" required value="" placeholder="email" />
-                        <input type="submit" value="Crear"></input>
-                    </form>
-        
-                    <form onsubmit="borrarCliente(this)">
-                        <select id='listaClientes' class='form-control' required>
-                        </select>
-                        <input type="submit" value="Borrar"></input>
-                    </form>
-                </div>
+        <div class="container">
+            <div class="container-clientes">
+                <h2>Clientes</h2>
+                <form onsubmit="return guardarCliente(this)">
+                    <input id="nombre" type="text" required value="" placeholder="Nombre"  /> 
+                    <input id="apellido" type="text" required value="" placeholder="Apellido" />
+                    <input id="dni" type="text" required value="" placeholder="dni" />
+                    <input id="email" type="text" required value="" placeholder="email" />
+                    <input type="submit" value="Crear"></input>
+                </form>
                 
-                <div id="zona-pedidos">
-                    <h2 style="color: blue;">Centro de Pedidos</h2>
-                    <form onsubmit="sumarProducto(this)">
-                        <label>Cliente: 
-                        <select id='listaClientes2' class='form-control' required></select>
-                        </label>
+                <form onsubmit="return borrarCliente(this)">
+                    <select id='listaClientes' class='form-control' required>
+                    </select>
+                    <input type="submit" value="Borrar"></input>
+                </form>
+            </div>
+
+            <div class="centro-pedidos">
+                <h2 style="color: blue;">Centro de Pedidos</h2>
+                <form onsubmit="return sumarProducto(this);">
+                    <label>Cliente: 
+                    <select id='listaClientes2' class='form-control' required></select>
+                    </label>
         
-                        <label>Producto: 
-                            <select id='listaProductos' class='form-control' required></select>
-                            <input id="cantidad" type="text" required value="" placeholder="Cantidad"  />
-                        </label>
-                        <input type="submit" value="Sumar Producto" style="margin-left: 215px ;"></input>
-                        
-                    </form>
-                    <label for="ErrorEnPedido" id="errorStock"></label>
-                    <button style="width: 100%" onclick="mostrarPedido(this)" >Ver Pedido</button>
-                </div>
+                    <label>Producto: 
+                        <select id='listaProductos' class='form-control' required></select>
+                        <input id="cantidad" type="text" required value="" placeholder="Cantidad"  />
+                    </label>
+                    <input type="submit" value="Sumar" style="width: 100%"></input>
+                    <label for="Stock" id="errorStock" hidden> </label>
+                </form>
+                <button onclick="mostrarPedido(this)" style="width: 100%">Ver Pedido</button>
+            </div>
+
+
+            <div class="detalle-pedido">
                 <h2 style="color: blue;">Detalle Pedido</h2>
-                <div id="zona-detalle-pedido">
-                    <table class="table" id="tablaPedidos">
-                        <thead>
-                          <tr>
-                            <th>Producto</th>
-                            <th>Precio</th>
-                            <th>Cantidad</th>
-                            <th style="width: 36px;"></th>
-                          </tr>
-                        </thead>
-                        <tbody></tbody>
-                </div>
+                <table class="table" id="tablaPedidos">
+                    <thead>
+                      <tr>
+                        <th>Producto</th>
+                        <th>Precio</th>
+                        <th>Cantidad</th>
+                        <th style="width: 36px;"></th>
+                      </tr>
+                    </thead>
+                    <tbody></tbody>
+                    
                 </table>
                 <label for="total" id="totalPedido"></label>
-                <!-- <label for="date" id="datePedido"></label> -->
+                <label for="fecha" id="datePedido"></label>
             </div>
         </div>
-      
-        
+
 
     </body>
 </html>
