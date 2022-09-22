@@ -13,9 +13,9 @@ const server = http.createServer(app)
 const { Server } = require('socket.io')
 const io = new Server(server)
 
-//vvvvvvvvvv-BORRAR ESTO-vvvvvvvvvv
+
 const routerProductos = require('./routes/rutas')
-//^^^^^^^^^^-BORRAR ESTO-^^^^^^^^^^
+
 
 app.use(express.static('public'))
 
@@ -24,11 +24,11 @@ app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 
 
-//vvvvvvvvvv-BORRAR ESTO-vvvvvvvvvv
+
 routerProductos.use(express.json())
 routerProductos.use(express.urlencoded({extended:true}))
 app.use('/t',routerProductos)
-//^^^^^^^^^^-BORRAR ESTO-^^^^^^^^^^
+
 
 
 io.on("connection", async (socket) => {
@@ -38,7 +38,7 @@ io.on("connection", async (socket) => {
     const todosLosProductos = await new Productos().listarProductos()
 
 
-    // socket.emit("todos-mensajes",mensajes) //envio los mensajes a los clientes
+    
     socket.emit("todos-los-clientes",todosLosClientes)
     socket.emit("todos-los-productos",todosLosProductos)
 
