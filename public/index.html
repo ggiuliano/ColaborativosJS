@@ -10,13 +10,13 @@
         <script src="./functions.js"></script>
         <style>
             body { background-color: #17a2b8;}
-            h2 { text-align: center;}
+            h2 { text-align: center; color: rgb(117, 116, 116);}
             .container {
                 margin-top: 120px;
                 max-width: 600px;
-                height: 900px;
+                height: auto;
                 border: 3px solid #9C9C9C;
-                background-color: #EAEAEA;
+                background-color: #a0a1c3;
             }
             .container-clientes{
                 margin: 20px;
@@ -39,18 +39,18 @@
                     <input id="apellido" type="text" required value="" placeholder="Apellido" />
                     <input id="dni" type="text" required value="" placeholder="dni" />
                     <input id="email" type="text" required value="" placeholder="email" />
-                    <input type="submit" value="Crear"></input>
+                    <input type="submit" value="Crear" class="btn btn-primary"></input>
                 </form>
                 
                 <form onsubmit="return borrarCliente(this)">
                     <select id='listaClientes' class='form-control' required>
                     </select>
-                    <input type="submit" value="Borrar"></input>
+                    <input type="submit" value="Borrar" class="btn btn-danger"></input>
                 </form>
             </div>
-
+            <hr>
             <div class="centro-pedidos">
-                <h2 style="color: blue;">Centro de Pedidos</h2>
+                <h2>Centro de Pedidos</h2>
                 <form onsubmit="return sumarProducto(this);">
                     <label>Cliente: 
                     <select id='listaClientes2' class='form-control' required></select>
@@ -60,15 +60,15 @@
                         <select id='listaProductos' class='form-control' required></select>
                         <input id="cantidad" type="text" required value="" placeholder="Cantidad"  />
                     </label>
-                    <input type="submit" value="Sumar" style="width: 100%"></input>
+                    <input type="submit" value="Agregar Producto" class="btn btn-info" style="width: 100%"></input>
                     <label for="Stock" id="errorStock" hidden> </label>
                 </form>
-                <button onclick="mostrarPedido(this)" style="width: 100%">Ver Pedido</button>
+                <button onclick="mostrarPedido(this)" style="width: 100%" type="button" class="btn btn-info">Generar Ticket</button>
             </div>
 
 
             <div class="detalle-pedido">
-                <h2 style="color: blue;">Detalle Pedido</h2>
+                <h2 style="margin-right: 100px;">Detalle Pedido</h2>
                 <table class="table" id="tablaPedidos">
                     <thead>
                       <tr>
@@ -79,10 +79,11 @@
                       </tr>
                     </thead>
                     <tbody></tbody>
-                    
+                    <button onclick="finalizarPedido(this)" type="button" class="btn btn-success">Finalizar Pedido</button>
                 </table>
                 <label for="total" id="totalPedido"></label>
                 <label for="fecha" id="datePedido"></label>
+                <label for="estado" id="estadoPedido"></label>
             </div>
         </div>
 

@@ -78,13 +78,26 @@ io.on("connection", async (socket) => {
         const client = await new Clientes().buscarCliente(prodPedidos)
         let totalPedido = 0
         let nowDate = moment().format('DD/MM/YYYY');
+        let estado = 'Pedido en curso'
 
         if (prodPedidos != ''){
             const productosPedido = client.productos
             for (i=0; i<productosPedido.length; i++){
                 totalPedido = totalPedido + (productosPedido[i].precio * productosPedido[i].cantidad)
             }
-            socket.emit("mostrar-prod-pedidos", [productosPedido,totalPedido, nowDate])
+            socket.emit("mostrar-prod-pedidos", [productosPedido,totalPedido, nowDate, estado])
+        }
+    })
+
+    socket.on('finalizar-pedido', async (clientePedido) => {
+        const confirmaFin = 'Pedido fue finalizado con exito'
+        const errorFinPedido = 'Error, no se puede cerrar pedido sin productos'
+        console.log(`se recibio esto: ${JSON.stringify(clientePedido)}`)
+        const finPedido = await new Clientes().finalizarPedidoCliente(clientePedido)
+        if (finPedido == 'error'){
+            socket.emit("error-fin-pedido", [errorFinPedido])
+        }else{
+            socket.emit("pedido-finalizado", [confirmaFin])
         }
     })
 

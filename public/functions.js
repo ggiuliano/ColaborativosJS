@@ -33,12 +33,36 @@ var templateDate = Handlebars.compile(`
           <label style="font-weight:bold">Fecha: {{date}}</label>
 `)
 
+var templateEstado = Handlebars.compile(`
+          <label style="font-weight:bold; font-style: italic">Estado: {{estado}}</label>
+`)
+
 var templateError = Handlebars.compile(`
         <label style="font-weight:bold; color: red;">{{error}}</label>
 `)
 
 var templateConfirm = Handlebars.compile(`
         <label style="font-weight:bold; color: green;">{{confirm}}</label>
+`)
+
+var templateErrorFin = Handlebars.compile(`
+        <label style="font-weight:bold; color: red;">{{errorFin}}</label>
+`)
+
+var templateConfirmFin = Handlebars.compile(`
+        <label style="font-weight:bold; color: green;">{{pedidoFin}}</label>
+`)
+
+var templateRefresh1 = Handlebars.compile(`
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+`)
+
+var templateRefresh2 = Handlebars.compile(`
+        <label></label>
 `)
 
 //funcion para guardar un cliente en la BD cargado mediante el form
@@ -92,6 +116,13 @@ function generarTicket(){
     socket.emit("generar-ticket", clientePedido)
 }
 
+function finalizarPedido(){
+    let cliente = document.querySelector('#listaClientes2')
+    const clientePedido = cliente.value
+
+    socket.emit("finalizar-pedido", clientePedido)
+}
+
 
 //funcion para mostrar todos los clientes en el front
 function mostrarTodosClientes(clientes){
@@ -110,9 +141,13 @@ function mostrarTodosProdPedidos(pedido){
     let elHtml = templatePedidos({pedido:pedido[0]})
     let total = templatetotal({total:pedido[1]})
     let date = templateDate({date:pedido[2]})
+    let estado = templateEstado({estado:pedido[3]})
+    let refresh = templateRefresh2()
     $('#tablaPedidos tbody').html(elHtml)
     $('#totalPedido').html(total)
     $('#datePedido').html(date)
+    $('#estadoPedido').html(estado)
+    $('#errorStock').html(refresh)
 }
 
 function mostrarError(error){
@@ -124,6 +159,24 @@ function hacerConfirmacion(confirm){
     let confirmation = templateConfirm({confirm:confirm[0]})
     $('#errorStock').html(confirmation)
 }
+
+function mostrarErrorFin(errorFin){
+    let errorF = templateErrorFin({errorFin:errorFin[0]})
+    $('#errorStock').html(errorF)
+}
+
+function mostrarMsgPedidoFin(pedidoFin){
+    let pedidoFinaliado = templateConfirmFin({pedidoFin:pedidoFin[0]})
+    let refresh = templateRefresh2()
+    let refreshTable = templateRefresh1()
+    $('#errorStock').html(pedidoFinaliado)
+    $('#totalPedido').html(refresh)
+    $('#datePedido').html(refresh)
+    $('#estadoPedido').html(refresh)
+    $('#tablaPedidos tbody').html(refreshTable)
+
+}
+
 
 // Recibo todos los clientes del back
 socket.on('todos-los-clientes', function(data) {
@@ -148,4 +201,14 @@ socket.on('falta-stock', function(data){
 socket.on('confirmation', function(data){
     console.log('llegue a confirmation', data)
     hacerConfirmacion(data)
+})
+
+socket.on('error-fin-pedido', function(data){
+    console.log('llegue a error-fin-pedido', data)
+    mostrarErrorFin(data)
+})
+
+socket.on('pedido-finalizado', function(data){
+    console.log('llegue a pedido-finalizado', data)
+    mostrarMsgPedidoFin(data)
 })

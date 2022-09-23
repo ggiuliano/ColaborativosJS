@@ -1,6 +1,8 @@
 const moment = require('moment')
+const { addListener } = require('../models/db/cliente')
 const clientesModel = require('../models/db/cliente')
 const productosController = require('./productos')
+const pedidosModel = require('../models/db/pedidos')
 
 const Productos = new productosController()
 
@@ -70,4 +72,34 @@ module.exports = class ClientesDB {
     }
   }
 
+  async finalizarPedidoCliente(id){
+    let elCliente = await this.buscarCliente(id)
+    let clienteinternal_id = elCliente._id.toString()
+    let totalPedido = 0
+    let PedidoCliente = elCliente.productos
+
+    if(PedidoCliente.length == 0){
+      return 'error'
+    }
+
+    for (i=0; i<PedidoCliente.length; i++){
+      totalPedido = totalPedido + (PedidoCliente[i].precio * PedidoCliente[i].cantidad)
+    }
+    let nowDate = moment().format('DD/MM/YYYY');
+
+    
+    let pedidoFinalizado = {
+      idCliente:elCliente.id,
+      email: elCliente.email,
+      total: totalPedido,
+      fecha: nowDate,
+      pedido: PedidoCliente
+    }
+    await pedidosModel.create(pedidoFinalizado)
+    console.log(`Pedido Almacenado`)
+    elCliente.productos = []
+    await clientesModel.findByIdAndUpdate(clienteinternal_id,elCliente,{new:true})
+
+    return 'ok'
+  }
 }
